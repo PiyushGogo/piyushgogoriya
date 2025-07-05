@@ -1,6 +1,7 @@
 import Experience from "@/components/experience";
 import Header from "@/components/header";
 import HeroSection from "@/components/hero-section";
+import Projects from "@/components/projects";
 import Skills from "@/components/skill";
 import Image from "next/image";
 
@@ -9,7 +10,8 @@ export default function Home() {
       < Header />
       <HeroSection />
       <Skills />
-      < Experience />
+      <Experience />
+      <Projects />
             
       </>
   );
