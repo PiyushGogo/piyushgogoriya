@@ -438,7 +438,6 @@ export default function HeroSplit() {
   const [current, setCurrent] = useState(0);
   const [showGreeting, setShowGreeting] = useState(true);
 
-  // Rotate phrases every 3 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % phrases.length);
@@ -446,7 +445,6 @@ export default function HeroSplit() {
     return () => clearInterval(interval);
   }, []);
 
-  // Hide greeting after 2.5 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowGreeting(false);
@@ -555,38 +553,81 @@ export default function HeroSplit() {
               ))}
             </motion.ul>
 
-            {/* Buttons */}
-            <motion.div
+            {/* Links Row */}
+            {/* <motion.div
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 show: { opacity: 1, y: 0 },
               }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-wrap gap-6 text-gray-400 text-sm uppercase tracking-wider"
             >
-              <Link href="#projects">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-indigo-500 text-white px-6 py-3 rounded-full font-medium transition"
-                >
-                  See My Work
-                </motion.button>
-              </Link>
               <a
-                href="mailto:piyushgogoriya0312@gmail.com"
+                href="https://www.linkedin.com/in/your-profile"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="hover:text-white flex items-center gap-1 transition"
               >
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="border border-gray-600 px-6 py-3 rounded-full font-medium text-white hover:bg-white hover:text-black transition"
-                >
-                  Contact Me
-                </motion.button>
+                LinkedIn <span>↗</span>
               </a>
-            </motion.div>
+              <a
+                href="https://github.com/yourusername"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white flex items-center gap-1 transition"
+              >
+                GitHub <span>↗</span>
+              </a>
+              <a
+                href="https://instagram.com/yourusername"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white flex items-center gap-1 transition"
+              >
+                Instagram <span>↗</span>
+              </a>
+              <a
+                href="mailto:piyushgogoriya0312@gmail.com"
+                className="hover:text-white flex items-center gap-1 transition"
+              >
+                Gmail <span>↗</span>
+              </a>
+            </motion.div> */}
+            <motion.div
+  variants={{
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 },
+  }}
+  transition={{ duration: 0.6, ease: "easeOut" }}
+  // 👇 Add "group" here
+  className="flex flex-wrap gap-6 text-gray-400 text-sm uppercase tracking-wider group"
+>
+  {[
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/your-profile" },
+    { label: "GitHub", href: "https://github.com/yourusername" },
+    { label: "Instagram", href: "https://instagram.com/yourusername" },
+    { label: "Gmail", href: "mailto:piyushgogoriya0312@gmail.com" },
+  ].map((link) => (
+    <a
+      key={link.label}
+      href={link.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      // 👇 Here: when *any* link is hovered, all links get opacity-50,
+      // and the hovered one stays bright.
+      className="
+        hover:text-white
+        group-hover:opacity-50
+        hover:!opacity-100
+        flex items-center gap-1
+        transition
+      "
+    >
+      {link.label} <span>↗</span>
+    </a>
+  ))}
+</motion.div>
+
           </motion.div>
 
           {/* Image */}
@@ -619,7 +660,3 @@ export default function HeroSplit() {
     </section>
   );
 }
-
-
-
-
