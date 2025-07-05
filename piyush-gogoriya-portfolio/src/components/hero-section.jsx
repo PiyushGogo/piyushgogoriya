@@ -523,7 +523,7 @@ export default function HeroSplit() {
               transition={{ duration: 0.6, ease: "easeOut" }}
               className="text-xl md:text-2xl font-medium text-gray-300 mb-6 flex flex-wrap gap-2"
             >
-              <span>Full-Stack Developer specializing in</span>
+              <span>Full-Stack Developer | </span>
               <AnimatePresence mode="wait">
                 <motion.span
                   key={phrases[current]}
