@@ -21,6 +21,9 @@ export default function Header() {
   const buttonPaddingX = useTransform(scrollY, [0, 200], [20, 12]);
   const borderRadius = useTransform(scrollY, [0, 200], ["0", "20rem"]);
 
+  const [hoveredB, setHoveredB] = useState(false);
+
+  
 
   return (
     <div className="bg-gray-50">
@@ -40,10 +43,55 @@ export default function Header() {
         >
           <div className="h-full px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              {/* Logo */}
-              <div className="flex items-center space-x-2">
-                <span className="text-xl font-bold text-white">PG</span>
-              </div>
+              <motion.div
+            onMouseEnter={() => setHoveredB(true)}
+            onMouseLeave={() => setHoveredB(false)}
+            className="text-[24px] w-[200] text-white ml-4 cursor-pointer z-20"
+            style={{ fontFamily: "Rinter" }}
+        >
+            <div className="inline-block">
+                P
+                <motion.span
+                    className="text-[24px] text-white inline-block align-baseline"
+                    initial={{ width: 0, opacity: 0 }}
+                    animate={{
+                        width: hoveredB ? "auto" : 0,
+                        opacity: hoveredB ? 1 : 0,
+                    }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                >
+                    <motion.span
+                        className="inline-block whitespace-nowrap align-baseline"
+                        initial={{ x: -20 }}
+                        animate={{ x: hoveredB ? 0 : -20 }}
+                        transition={{ duration: 0.6, ease: "easeInOut" }}
+                    >
+                        iyush
+                    </motion.span>
+                </motion.span>
+            </div>
+            <div className="inline-block">
+                G
+                <motion.span
+                    className="text-[24px] text-white inline-block align-baseline"
+                    initial={{ width: 0, opacity: 0 }}
+                    animate={{
+                        width: hoveredB ? "auto" : 0,
+                        opacity: hoveredB ? 1 : 0,
+                    }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                >
+                    <motion.span
+                        className="inline-block whitespace-nowrap align-baseline"
+                        initial={{ x: -20 }}
+                        animate={{ x: hoveredB ? 0 : -20 }}
+                        transition={{ duration: 0.6, ease: "easeInOut" }}
+                    >
+                        ogoriya
+                    </motion.span>
+                </motion.span>
+            </div>
+        </motion.div>
 
               {/* Desktop Navigation */}
               <nav className="hidden md:flex items-center space-x-6">
@@ -54,7 +102,7 @@ export default function Header() {
                     style={{ fontSize }}
                     className="text-gray-300 hover:text-white transition-colors duration-200 font-medium"
                     whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileTap={{ scale: 1.25 }}
                   >
                     {item.name}
                   </motion.a>
@@ -62,8 +110,8 @@ export default function Header() {
               </nav>
 
               {/* CTA Button */}
-              <motion.button
-                className="hidden md:block bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
+              <motion.p
+                className="hidden md:block bg-gray-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
                 style={{
                   paddingTop: buttonPaddingY,
                   paddingBottom: buttonPaddingY,
@@ -75,7 +123,7 @@ export default function Header() {
                 whileTap={{ scale: 0.95 }}
               >
                 Resume
-              </motion.button>
+              </motion.p>
 
               {/* Mobile Menu Button */}
               <button
