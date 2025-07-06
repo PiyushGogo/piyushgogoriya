@@ -473,7 +473,7 @@ export default function HeroSplit() {
   }, []);
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0d0d0d] to-[#1a1a1a] text-white px-6 md:px-12 pt-20 pb-10 relative overflow-hidden">
+    <section id="about" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0d0d0d] to-[#1a1a1a] text-white px-6 md:px-12 pt-20 pb-10 relative overflow-hidden">
       {/* Animated Greeting */}
       <AnimatePresence>
         {showGreeting && (

@@ -23,7 +23,7 @@
 
 //   const [hoveredB, setHoveredB] = useState(false);
 
-  
+
 
 //   return (
 //     <div className="bg-gray-50">
@@ -184,16 +184,20 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { Download } from "lucide-react";
+
 
 const navigationItems = [
-  { name: "Home", href: "#home" },
   { name: "About", href: "#about" },
-  { name: "Services", href: "#services" },
+  { name: "Skills", href: "#skills" },
+  { name: "Experience", href: "#experience" },
+  { name: "Projects", href: "#projects" },
   { name: "Contact", href: "#contact" },
 ];
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
 
   // Detect desktop vs mobile
   const [isDesktop, setIsDesktop] = useState(true);
@@ -202,22 +206,41 @@ export default function Header() {
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 768);
     };
-
-    handleResize(); // Initial check
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const { scrollY } = useScroll();
 
-  // Transforms for collapsing
-  const width = useTransform(scrollY, [0, 200], ["100%", "50%"]);
+  const width = useTransform(scrollY, [0, 200], ["100%", "55%"]);
   const fontSize = useTransform(scrollY, [0, 200], ["16px", "14px"]);
   const buttonPaddingY = useTransform(scrollY, [0, 200], [10, 6]);
   const buttonPaddingX = useTransform(scrollY, [0, 200], [20, 12]);
   const borderRadius = useTransform(scrollY, [0, 200], ["0", "20rem"]);
 
   const [hoveredB, setHoveredB] = useState(false);
+
+  // Track active section
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(`#${entry.target.id}`);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    navigationItems.forEach((item) => {
+      const section = document.querySelector(item.href);
+      if (section) observer.observe(section);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   // Scroll to top on load
   useEffect(() => {
@@ -234,15 +257,12 @@ export default function Header() {
           style={{
             width: isDesktop ? width : "100%",
             borderRadius: isDesktop ? borderRadius : "0",
-            backgroundColor: "#0b0b0dcc", // semi-transparent backdrop color
+            backgroundColor: "#0b0b0dcc",
             backdropFilter: "blur(12px)",
             opacity: 1,
           }}
           className="bg-transparent backdrop-blur-md shadow-lg"
-          transition={{
-            duration: 0.3,
-            ease: "easeInOut",
-          }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
         >
           <div className="h-full px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
@@ -303,21 +323,73 @@ export default function Header() {
               {/* Desktop Navigation */}
               <nav className="hidden md:flex items-center space-x-6">
                 {navigationItems.map((item) => (
+                  // <motion.a
+                  //   key={item.name}
+                  //   href={item.href}
+                  //   style={{ fontSize }}
+                  //   className={`
+                  //     relative font-medium transition-colors duration-200
+                  //     flex items-center gap-1
+                  //     ${
+                  //       activeSection === item.href
+                  //         ? "text-white"
+                  //         : "text-gray-300 hover:text-white"
+                  //     }
+                  //     after:absolute after:left-0 after:-bottom-1 after:h-0.5
+                  //     after:bg-lime-400 after:transition-all after:duration-300
+                  //     ${
+                  //       activeSection === item.href
+                  //         ? "after:w-full"
+                  //         : "after:w-0 hover:after:w-full"
+                  //     }
+                  //   `}
+                  //   whileHover={{ scale: 1.05 }}
+                  //   whileTap={{ scale: 1.25 }}
+                  // >
+                  //   {activeSection === item.href && (
+                  //     <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                  //   )}
+                  //   {item.name}
+                  // </motion.a>
                   <motion.a
                     key={item.name}
                     href={item.href}
                     style={{ fontSize }}
-                    className="text-gray-300 hover:text-white transition-colors duration-200 font-medium"
+                    className={`
+    relative
+    font-medium
+    transition-colors duration-200
+    flex items-center gap-2
+    ${activeSection === item.href
+                        ? "text-white"
+                        : "text-gray-300 hover:text-white"
+                      }
+    ${activeSection !== item.href ? "after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:bg-lime-400 after:transition-all after:duration-300" : ""}
+    ${activeSection !== item.href
+                        ? "after:w-0 hover:after:w-full"
+                        : ""
+                      }
+  `}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 1.25 }}
                   >
+                    {activeSection === item.href && (
+                      <span
+                        className="inline-block w-2 h-2 rounded-full"
+                        style={{
+                          backgroundColor: "#84cc16", // lime-400
+                          flexShrink: 0,
+                        }}
+                      />
+                    )}
                     {item.name}
                   </motion.a>
+
                 ))}
               </nav>
 
               {/* CTA Button */}
-              <motion.p
+              {/* <motion.p
                 className="hidden md:block bg-gray-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
                 style={{
                   paddingTop: buttonPaddingY,
@@ -330,7 +402,22 @@ export default function Header() {
                 whileTap={{ scale: 0.95 }}
               >
                 Resume
-              </motion.p>
+              </motion.p> */}
+              <a
+                href="/resume.pdf"
+                download
+                className="
+    hidden md:inline-flex items-center
+    text-gray-300 hover:text-lime-400
+    transition
+    ml-6
+
+  "
+                title="Download Resume"
+              >
+                <Download className="w-5 h-5" />
+              </a>
+
 
               {/* Mobile Menu Button */}
               <button
@@ -357,10 +444,7 @@ export default function Header() {
           opacity: isMobileMenuOpen ? 1 : 0,
           width: "90%",
         }}
-        transition={{
-          duration: 0.3,
-          ease: "easeInOut",
-        }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
         style={{ overflow: "hidden" }}
       >
         <div className="px-6 py-4 space-y-3">
@@ -375,15 +459,8 @@ export default function Header() {
               {item.name}
             </motion.a>
           ))}
-          <motion.button
-            className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200 mt-4"
-            whileTap={{ scale: 0.95 }}
-          >
-            Get Started
-          </motion.button>
         </div>
       </motion.div>
     </div>
   );
 }
-

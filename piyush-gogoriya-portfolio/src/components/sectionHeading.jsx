@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 
 export default function SectionHeading({ label, title }) {
+  const titleLetters = title.split("");
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -25,9 +27,44 @@ export default function SectionHeading({ label, title }) {
           {label}
         </span>
       </div>
-      <h2 className="text-3xl md:text-4xl text-left font-extrabold text-gray-100">
-        {title}
-      </h2>
+      <motion.h2
+        className="
+          text-2xl sm:text-3xl md:text-4xl
+          text-left
+          font-extrabold
+          text-gray-100
+          flex flex-wrap
+          cursor-default
+        "
+        initial="hidden"
+        whileInView="visible"
+        // whileHover={{ scale: 1.05 }}
+        viewport={{ once: true }}
+        variants={{
+          visible: {
+            transition: {
+              staggerChildren: 0.03,
+            },
+          },
+        }}
+      >
+        {titleLetters.map((char, i) => (
+          <motion.span
+            key={i}
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            whileHover={{
+              color: "#a78bfa", // subtle highlight on hover
+              y: -2, // slight lift
+            }}
+          >
+            {char}
+          </motion.span>
+        ))}
+      </motion.h2>
     </motion.div>
   );
 }
