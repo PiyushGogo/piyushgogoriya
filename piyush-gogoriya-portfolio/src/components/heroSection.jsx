@@ -416,7 +416,6 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 import Image from "next/image";
 
 export default function HeroSplit() {
@@ -439,6 +438,27 @@ export default function HeroSplit() {
   const [showGreeting, setShowGreeting] = useState(true);
 
   useEffect(() => {
+  const timer = setTimeout(() => {
+    setShowGreeting(false);
+  }, 2000);
+
+  // When greeting shows, disable scroll and scroll to top
+  if (showGreeting) {
+    document.body.style.overflow = "hidden";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } else {
+    document.body.style.overflow = "auto";
+  }
+
+  return () => {
+    clearTimeout(timer);
+    document.body.style.overflow = "auto"; // cleanup
+  };
+}, [showGreeting]);
+
+
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % phrases.length);
     }, 3000);
@@ -453,7 +473,7 @@ export default function HeroSplit() {
   }, []);
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0d0d0d] to-[#1a1a1a] text-white px-6 md:px-12 relative overflow-hidden">
+    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0d0d0d] to-[#1a1a1a] text-white px-6 md:px-12 pt-20 pb-10 relative overflow-hidden">
       {/* Animated Greeting */}
       <AnimatePresence>
         {showGreeting && (
@@ -474,8 +494,37 @@ export default function HeroSplit() {
       {/* Main Content */}
       {!showGreeting && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl w-full items-center">
-          {/* Text */}
+          {/* Image FIRST on mobile */}
           <motion.div
+            className="order-1 md:order-2 flex justify-center"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{
+              opacity: 1,
+              y: [0, -10, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, ease: "easeOut" },
+              y: {
+                duration: 4,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "reverse",
+              },
+            }}
+          >
+            <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-xl overflow-hidden border-4 border-indigo-500 shadow-xl">
+              <Image
+                src="/profile.jpeg"
+                alt="Piyush Gogoriya"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </motion.div>
+
+          {/* Text SECOND on mobile */}
+          <motion.div
+            className="order-2 md:order-1"
             initial="hidden"
             animate="show"
             variants={{
@@ -553,110 +602,42 @@ export default function HeroSplit() {
               ))}
             </motion.ul>
 
-            {/* Links Row */}
-            {/* <motion.div
+            {/* Links */}
+            <motion.div
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 show: { opacity: 1, y: 0 },
               }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="flex flex-wrap gap-6 text-gray-400 text-sm uppercase tracking-wider"
+              className="flex flex-wrap gap-6 text-gray-400 text-sm uppercase tracking-wider group"
             >
-              <a
-                href="https://www.linkedin.com/in/your-profile"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white flex items-center gap-1 transition"
-              >
-                LinkedIn <span>↗</span>
-              </a>
-              <a
-                href="https://github.com/yourusername"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white flex items-center gap-1 transition"
-              >
-                GitHub <span>↗</span>
-              </a>
-              <a
-                href="https://instagram.com/yourusername"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white flex items-center gap-1 transition"
-              >
-                Instagram <span>↗</span>
-              </a>
-              <a
-                href="mailto:piyushgogoriya0312@gmail.com"
-                className="hover:text-white flex items-center gap-1 transition"
-              >
-                Gmail <span>↗</span>
-              </a>
-            </motion.div> */}
-            <motion.div
-  variants={{
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
-  }}
-  transition={{ duration: 0.6, ease: "easeOut" }}
-  // 👇 Add "group" here
-  className="flex flex-wrap gap-6 text-gray-400 text-sm uppercase tracking-wider group"
->
-  {[
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/your-profile" },
-    { label: "GitHub", href: "https://github.com/yourusername" },
-    { label: "Instagram", href: "https://instagram.com/yourusername" },
-    { label: "Gmail", href: "mailto:piyushgogoriya0312@gmail.com" },
-  ].map((link) => (
-    <a
-      key={link.label}
-      href={link.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      // 👇 Here: when *any* link is hovered, all links get opacity-50,
-      // and the hovered one stays bright.
-      className="
-        hover:text-white
-        group-hover:opacity-50
-        hover:!opacity-100
-        flex items-center gap-1
-        transition
-      "
-    >
-      {link.label} <span>↗</span>
-    </a>
-  ))}
-</motion.div>
-
-          </motion.div>
-
-          {/* Image */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{
-              opacity: 1,
-              y: [0, -10, 0],
-            }}
-            transition={{
-              opacity: { duration: 0.8, ease: "easeOut" },
-              y: {
-                duration: 4,
-                ease: "easeInOut",
-                repeat: Infinity,
-                repeatType: "reverse",
-              },
-            }}
-            className="relative w-64 h-64 md:w-80 md:h-80 mx-auto rounded-xl overflow-hidden border-4 border-indigo-500 shadow-xl"
-          >
-            <Image
-              src="/profile.jpeg"
-              alt="Piyush Gogoriya"
-              fill
-              className="object-cover"
-            />
+              {[
+                { label: "LinkedIn", href: "https://www.linkedin.com/in/piyush-gogoriya" },
+                { label: "GitHub", href: "https://github.com/PiyushGogo" },
+                // { label: "Instagram", href: "https://instagram.com/yourusername" },
+                { label: "Gmail", href: "mailto:piyushgogoriya0312@gmail.com" },
+              ].map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="
+                    hover:text-white
+                    group-hover:opacity-50
+                    hover:!opacity-100
+                    flex items-center gap-1
+                    transition
+                  "
+                >
+                  {link.label} <span>↗</span>
+                </a>
+              ))}
+            </motion.div>
           </motion.div>
         </div>
       )}
     </section>
   );
 }
+
